@@ -39,7 +39,7 @@ class Spree::AddressesController < Spree::StoreController
       end
     else
       new_address = @address.clone
-      new_address.attributes = address_params
+      new_address.attributes = address_params 
       @address.update_attribute(:deleted_at, Time.now)
       if new_address.save
         flash[:notice] = I18n.t(:successfully_updated, scope: :address_book)
@@ -59,17 +59,7 @@ class Spree::AddressesController < Spree::StoreController
 
   private
     def address_params
-      params[:address].permit(:address,
-                              :firstname,
-                              :lastname,
-                              :address1,
-                              :address2,
-                              :city,
-                              :state_id,
-                              :zipcode,
-                              :country_id,
-                              :phone
-                             )
+      params.require(:address).permit(permitted_address_attributes).delete_if { |_k, v| v.nil? }
     end
 end
 
